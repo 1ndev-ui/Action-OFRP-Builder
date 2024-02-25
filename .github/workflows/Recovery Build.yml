@@ -44,11 +44,21 @@ on:
 
 jobs:
   build:
-    if: github.event.repository.owner.id == github.event.sender.id
     runs-on: ubuntu-20.04
     permissions:
       contents: write
     steps:
+    - name: Check if sender is a member of the organization
+        env:
+          PAT: ${{ secrets.PAT }}
+        run: |
+          sender_login=$(jq --raw-output .sender.login $GITHUB_EVENT_PATH)
+          org="1ndevelopment"
+          membership_status=$(curl -s -H "Authorization: token $PAT" https://api.github.com/orgs/$org/members/$sender_login | jq --raw-output .state)
+          if [[ "$membership_status" != "active" ]]; then
+            echo "Sender is not an active member of the organization"
+            exit 1
+          fi
  
     # You might want to Checkout your repo first, but not mandatory
     - name: Check Out
