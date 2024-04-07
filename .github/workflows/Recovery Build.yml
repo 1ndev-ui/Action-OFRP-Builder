@@ -118,7 +118,7 @@ jobs:
         set +e
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        export FOX_BUILD_DEVICE=CG65
+        export FOX_BUILD_DEVICE=${{ github.event.inputs.DEVICE_NAME }}
         export LC_ALL="C"
         export FOX_AB_DEVICE=1
         set -e
